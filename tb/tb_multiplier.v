@@ -236,7 +236,7 @@ module tb_multiplier;
         // ---------------------------------------------------------------------
         $display("Running 10,000 random vectors...");
 
-        for (i = 0; i < 10; i = i + 1) begin
+        for (i = 0; i < 10000; i = i + 1) begin
             @(posedge clk);
             operand_a = $urandom;
             operand_b = $urandom;
