@@ -1,0 +1,318 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 920" width="2000" height="920">
+
+    <defs>
+        <style>
+            .hdr-title { font-family: 'Consolas', monospace; font-weight: bold; font-size: 20px; fill: #0F172A; }
+            .hdr-sub { font-family: 'Consolas', monospace; font-size: 13px; fill: #475569; }
+            .sig-name { font-family: 'Consolas', monospace; font-weight: bold; font-size: 14px; fill: #1E293B; }
+            .sig-type { font-family: 'Consolas', monospace; font-size: 11px; fill: #64748B; }
+            .cycle-num { font-family: 'Consolas', monospace; font-weight: bold; font-size: 13px; fill: #0284C7; }
+            .bus-val { font-family: 'Consolas', monospace; font-size: 11px; fill: #0F172A; font-weight: 600; text-anchor: middle; }
+            .bus-val-stall { font-family: 'Consolas', monospace; font-size: 11.5px; fill: #B91C1C; font-weight: bold; text-anchor: middle; }
+            .bus-val-commit { font-family: 'Consolas', monospace; font-size: 11.5px; fill: #047857; font-weight: bold; text-anchor: middle; }
+            .annot-title { font-family: 'Consolas', monospace; font-weight: bold; font-size: 12.5px; fill: #0F172A; }
+            .annot-desc { font-family: 'Consolas', monospace; font-size: 11px; fill: #334155; }
+            .grid-line { stroke: #E2E8F0; stroke-width: 1; stroke-dasharray: 4,4; }
+            .clk-line { stroke: #0284C7; stroke-width: 2.2; fill: none; }
+            .sig-high { stroke: #DC2626; stroke-width: 2.2; fill: none; }
+            .sig-low { stroke: #94A3B8; stroke-width: 1.8; fill: none; }
+            .bus-outline { stroke: #334155; stroke-width: 1.8; fill: #F8FAFC; }
+            .bus-stall { stroke: #DC2626; stroke-width: 1.8; fill: #FEF2F2; }
+            .bus-commit { stroke: #059669; stroke-width: 1.8; fill: #ECFDF5; }
+            .bus-fwd { stroke: #2563EB; stroke-width: 1.8; fill: #EFF6FF; }
+            .arrow-fwd { stroke: #2563EB; stroke-width: 2; fill: none; stroke-dasharray: 4,3; }
+        </style>
+        <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#2563EB" />
+        </marker>
+        <marker id="arr-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#DC2626" />
+        </marker>
+    </defs>
+    
+<rect width="2000" height="920" fill="#FFFFFF"/>
+<rect x="20" y="15" width="1960" height="75" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+<text x="40" y="44" class="hdr-title">AutoVision-RISC-V: Cycle-Accurate Execution Trace &amp; Hazard Timing Diagram</text>
+<text x="40" y="68" class="hdr-sub">Real 25+ Cycle Instruction Sequence: RAW Data Forwarding (WB &#8594; EX), 1-Cycle DSP Multiplication &amp; Non-Restoring Division Freeze (&#8804; 34 Cycles)</text>
+<text x="1600" y="44" class="sig-name" fill="#0284C7">BENCHMARK: ADAS KERNEL</text>
+<text x="1600" y="66" class="sig-type">SIMULATOR: AMD VIVADO 2025.2</text>
+<rect x="262" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="299.0" y="118" class="cycle-num" text-anchor="middle">C1</text>
+<line x1="260" y1="126" x2="260" y2="745" class="grid-line"/>
+<rect x="340" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="377.0" y="118" class="cycle-num" text-anchor="middle">C2</text>
+<line x1="338" y1="126" x2="338" y2="745" class="grid-line"/>
+<rect x="418" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="455.0" y="118" class="cycle-num" text-anchor="middle">C3</text>
+<line x1="416" y1="126" x2="416" y2="745" class="grid-line"/>
+<rect x="496" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="533.0" y="118" class="cycle-num" text-anchor="middle">C4</text>
+<line x1="494" y1="126" x2="494" y2="745" class="grid-line"/>
+<rect x="574" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="611.0" y="118" class="cycle-num" text-anchor="middle">C5</text>
+<line x1="572" y1="126" x2="572" y2="745" class="grid-line"/>
+<rect x="652" y="100" width="74" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="689.0" y="118" class="cycle-num" text-anchor="middle">C6</text>
+<line x1="650" y1="126" x2="650" y2="745" class="grid-line"/>
+<rect x="730" y="100" width="245.60000000000002" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="852.8" y="118" class="cycle-num" text-anchor="middle">C7...C36 (30 Stalls)</text>
+<line x1="728" y1="126" x2="728" y2="745" class="grid-line"/>
+<rect x="979.6" y="100" width="73.99999999999989" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="1016.5999999999999" y="118" class="cycle-num" text-anchor="middle">C37</text>
+<line x1="977.6" y1="126" x2="977.6" y2="745" class="grid-line"/>
+<rect x="1057.6" y="100" width="74.0" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="1094.6" y="118" class="cycle-num" text-anchor="middle">C38</text>
+<line x1="1055.6" y1="126" x2="1055.6" y2="745" class="grid-line"/>
+<rect x="1135.6" y="100" width="74.0" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="1172.6" y="118" class="cycle-num" text-anchor="middle">C39</text>
+<line x1="1133.6" y1="126" x2="1133.6" y2="745" class="grid-line"/>
+<rect x="1213.6" y="100" width="74.0" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="1250.6" y="118" class="cycle-num" text-anchor="middle">C40</text>
+<line x1="1211.6" y1="126" x2="1211.6" y2="745" class="grid-line"/>
+<rect x="1291.6" y="100" width="74.0" height="26" rx="4" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+<text x="1328.6" y="118" class="cycle-num" text-anchor="middle">C41</text>
+<line x1="1289.6" y1="126" x2="1289.6" y2="745" class="grid-line"/>
+<line x1="1367.6" y1="126" x2="1367.6" y2="745" class="grid-line"/>
+<rect x="25" y="125" width="220" height="44" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="145" class="sig-name">clk_50mhz</text>
+<text x="35" y="160" class="sig-type">Clock (50 MHz)</text>
+<rect x="25" y="185" width="220" height="44" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="205" class="sig-name">PCF [31:0]</text>
+<text x="35" y="220" class="sig-type">Fetch Program Counter</text>
+<rect x="25" y="245" width="220" height="44" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="265" class="sig-name">InstrF [31:0]</text>
+<text x="35" y="280" class="sig-type">IF Stage Instruction</text>
+<rect x="25" y="305" width="220" height="46" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="325" class="sig-name">ID/EX Stage</text>
+<text x="35" y="340" class="sig-type">Execution / Coprocessor</text>
+<rect x="25" y="370" width="220" height="42" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="390" class="sig-name">div_busy</text>
+<text x="35" y="405" class="sig-type">Divider Freeze Flag</text>
+<rect x="25" y="430" width="220" height="42" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="450" class="sig-name">Stall_PC</text>
+<text x="35" y="465" class="sig-type">Pipeline Freeze Enable</text>
+<rect x="25" y="490" width="220" height="42" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="510" class="sig-name">ForwardBE[1:0]</text>
+<text x="35" y="525" class="sig-type">SrcBE RAW Mux Select</text>
+<rect x="25" y="550" width="220" height="42" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="570" class="sig-name">ForwardAE[1:0]</text>
+<text x="35" y="585" class="sig-type">SrcAE RAW Mux Select</text>
+<rect x="25" y="610" width="220" height="46" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="630" class="sig-name">WB Stage</text>
+<text x="35" y="645" class="sig-type">Writeback Commit Stage</text>
+<rect x="25" y="675" width="220" height="44" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+<text x="35" y="695" class="sig-name">ResultW [31:0]</text>
+<text x="35" y="710" class="sig-type">Committed Register Value</text>
+<path d="M 260 158 L 299.0 158 L 299.0 130 L 338 130 L 338 158" class="clk-line"/>
+<path d="M 338 158 L 377.0 158 L 377.0 130 L 416 130 L 416 158" class="clk-line"/>
+<path d="M 416 158 L 455.0 158 L 455.0 130 L 494 130 L 494 158" class="clk-line"/>
+<path d="M 494 158 L 533.0 158 L 533.0 130 L 572 130 L 572 158" class="clk-line"/>
+<path d="M 572 158 L 611.0 158 L 611.0 130 L 650 130 L 650 158" class="clk-line"/>
+<path d="M 650 158 L 689.0 158 L 689.0 130 L 728 130 L 728 158" class="clk-line"/>
+<path d="M 728 158 L 743 158 L 743 130 L 758 130 L 758 158" class="clk-line"/>
+<text x="852.8" y="148" class="bus-val" fill="#64748B">... 30 CLOCK PULSES ...</text>
+<path d="M 947.6 158 L 947.6 130 L 962.6 130 L 962.6 158 L 977.6 158" class="clk-line"/>
+<path d="M 977.6 158 L 1016.5999999999999 158 L 1016.5999999999999 130 L 1055.6 130 L 1055.6 158" class="clk-line"/>
+<path d="M 1055.6 158 L 1094.6 158 L 1094.6 130 L 1133.6 130 L 1133.6 158" class="clk-line"/>
+<path d="M 1133.6 158 L 1172.6 158 L 1172.6 130 L 1211.6 130 L 1211.6 158" class="clk-line"/>
+<path d="M 1211.6 158 L 1250.6 158 L 1250.6 130 L 1289.6 130 L 1289.6 158" class="clk-line"/>
+<path d="M 1289.6 158 L 1328.6 158 L 1328.6 130 L 1367.6 130 L 1367.6 158" class="clk-line"/>
+<polygon points="260,202.0 264,188 334,188 338,202.0 334,216 264,216" class="bus-outline"/>
+<text x="299.0" y="206.0" class="bus-val">0x0000</text>
+<polygon points="338,202.0 342,188 412,188 416,202.0 412,216 342,216" class="bus-outline"/>
+<text x="377.0" y="206.0" class="bus-val">0x0004</text>
+<polygon points="416,202.0 420,188 490,188 494,202.0 490,216 420,216" class="bus-outline"/>
+<text x="455.0" y="206.0" class="bus-val">0x0008</text>
+<polygon points="494,202.0 498,188 568,188 572,202.0 568,216 498,216" class="bus-outline"/>
+<text x="533.0" y="206.0" class="bus-val">0x000C</text>
+<polygon points="572,202.0 576,188 646,188 650,202.0 646,216 576,216" class="bus-outline"/>
+<text x="611.0" y="206.0" class="bus-val">0x0010</text>
+<polygon points="650,202.0 654,188 724,188 728,202.0 724,216 654,216" class="bus-outline"/>
+<text x="689.0" y="206.0" class="bus-val">0x0014</text>
+<polygon points="728,202.0 732,188 973.6,188 977.6,202.0 973.6,216 732,216" class="bus-stall"/>
+<text x="852.8" y="206.0" class="bus-val-stall">0x0014 (FROZEN VIA STALL_PC)</text>
+<polygon points="977.6,202.0 981.6,188 1051.6,188 1055.6,202.0 1051.6,216 981.6,216" class="bus-stall"/>
+<text x="1016.5999999999999" y="206.0" class="bus-val-stall">0x0014</text>
+<polygon points="1055.6,202.0 1059.6,188 1129.6,188 1133.6,202.0 1129.6,216 1059.6,216" class="bus-stall"/>
+<text x="1094.6" y="206.0" class="bus-val-stall">0x0014</text>
+<polygon points="1133.6,202.0 1137.6,188 1207.6,188 1211.6,202.0 1207.6,216 1137.6,216" class="bus-outline"/>
+<text x="1172.6" y="206.0" class="bus-val">0x0018</text>
+<polygon points="1211.6,202.0 1215.6,188 1285.6,188 1289.6,202.0 1285.6,216 1215.6,216" class="bus-outline"/>
+<text x="1250.6" y="206.0" class="bus-val">0x001C</text>
+<polygon points="1289.6,202.0 1293.6,188 1363.6,188 1367.6,202.0 1363.6,216 1293.6,216" class="bus-outline"/>
+<text x="1328.6" y="206.0" class="bus-val">0x0020</text>
+<polygon points="260,262.0 264,248 334,248 338,262.0 334,276 264,276" class="bus-outline"/>
+<text x="299.0" y="266.0" class="bus-val">addi x1,10</text>
+<polygon points="338,262.0 342,248 412,248 416,262.0 412,276 342,276" class="bus-outline"/>
+<text x="377.0" y="266.0" class="bus-val">addi x2,20</text>
+<polygon points="416,262.0 420,248 490,248 494,262.0 490,276 420,276" class="bus-outline"/>
+<text x="455.0" y="266.0" class="bus-val">add x3,x1,x2</text>
+<polygon points="494,262.0 498,248 568,248 572,262.0 568,276 498,276" class="bus-outline"/>
+<text x="533.0" y="266.0" class="bus-val">mul x4,x1,x2</text>
+<polygon points="572,262.0 576,248 646,248 650,262.0 646,276 576,276" class="bus-outline"/>
+<text x="611.0" y="266.0" class="bus-val">div x5,x4,x1</text>
+<polygon points="650,262.0 654,248 724,248 728,262.0 724,276 654,276" class="bus-outline"/>
+<text x="689.0" y="266.0" class="bus-val">addi x6,x5,5</text>
+<polygon points="728,262.0 732,248 973.6,248 977.6,262.0 973.6,276 732,276" class="bus-stall"/>
+<text x="852.8" y="266.0" class="bus-val-stall">addi x6,x5,5 (HELD IN IF REGISTER)</text>
+<polygon points="977.6,262.0 981.6,248 1051.6,248 1055.6,262.0 1051.6,276 981.6,276" class="bus-stall"/>
+<text x="1016.5999999999999" y="266.0" class="bus-val-stall">addi x6,x5,5</text>
+<polygon points="1055.6,262.0 1059.6,248 1129.6,248 1133.6,262.0 1129.6,276 1059.6,276" class="bus-stall"/>
+<text x="1094.6" y="266.0" class="bus-val-stall">addi x6,x5,5</text>
+<polygon points="1133.6,262.0 1137.6,248 1207.6,248 1211.6,262.0 1207.6,276 1137.6,276" class="bus-outline"/>
+<text x="1172.6" y="266.0" class="bus-val">NOP</text>
+<polygon points="1211.6,262.0 1215.6,248 1285.6,248 1289.6,262.0 1285.6,276 1215.6,276" class="bus-outline"/>
+<text x="1250.6" y="266.0" class="bus-val">NOP</text>
+<polygon points="1289.6,262.0 1293.6,248 1363.6,248 1367.6,262.0 1363.6,276 1293.6,276" class="bus-outline"/>
+<text x="1328.6" y="266.0" class="bus-val">NOP</text>
+<polygon points="260,323.0 264,308 334,308 338,323.0 334,338 264,338" class="bus-outline"/>
+<text x="299.0" y="327.0" class="bus-val">NOP</text>
+<polygon points="338,323.0 342,308 412,308 416,323.0 412,338 342,338" class="bus-outline"/>
+<text x="377.0" y="327.0" class="bus-val">addi x1,10</text>
+<polygon points="416,323.0 420,308 490,308 494,323.0 490,338 420,338" class="bus-outline"/>
+<text x="455.0" y="327.0" class="bus-val">addi x2,20</text>
+<polygon points="494,323.0 498,308 568,308 572,323.0 568,338 498,338" class="bus-outline"/>
+<text x="533.0" y="327.0" class="bus-val">add x3,x1,x2</text>
+<polygon points="572,323.0 576,308 646,308 650,323.0 646,338 576,338" class="bus-commit"/>
+<text x="611.0" y="327.0" class="bus-val-commit">mul x4 (DSP: 1 cyc)</text>
+<polygon points="650,323.0 654,308 724,308 728,323.0 724,338 654,338" class="bus-stall"/>
+<text x="689.0" y="327.0" class="bus-val-stall">div x5 (DIV Start)</text>
+<polygon points="728,323.0 732,308 973.6,308 977.6,323.0 973.6,338 732,338" class="bus-stall"/>
+<text x="852.8" y="327.0" class="bus-val-stall">div x5,x4,x1 (NON-RESTORING DIVIDER FSM BUSY - 32 TO 34 CYCLES)</text>
+<polygon points="977.6,323.0 981.6,308 1051.6,308 1055.6,323.0 1051.6,338 981.6,338" class="bus-stall"/>
+<text x="1016.5999999999999" y="327.0" class="bus-val-stall">div x5 (Step 31)</text>
+<polygon points="1055.6,323.0 1059.6,308 1129.6,308 1133.6,323.0 1129.6,338 1059.6,338" class="bus-stall"/>
+<text x="1094.6" y="327.0" class="bus-val-stall">div x5 (Step 32 / DONE)</text>
+<polygon points="1133.6,323.0 1137.6,308 1207.6,308 1211.6,323.0 1207.6,338 1137.6,338" class="bus-outline"/>
+<text x="1172.6" y="327.0" class="bus-val">addi x6,x5,5</text>
+<polygon points="1211.6,323.0 1215.6,308 1285.6,308 1289.6,323.0 1285.6,338 1215.6,338" class="bus-outline"/>
+<text x="1250.6" y="327.0" class="bus-val">NOP</text>
+<polygon points="1289.6,323.0 1293.6,308 1363.6,308 1367.6,323.0 1363.6,338 1293.6,338" class="bus-outline"/>
+<text x="1328.6" y="327.0" class="bus-val">NOP</text>
+<line x1="260" y1="398" x2="650" y2="398" class="sig-low"/>
+<path d="M 650 398 L 654 380 L 1051.6 380 L 1055.6 398" class="sig-high"/>
+<line x1="1055.6" y1="398" x2="1367.6" y2="398" class="sig-low"/>
+<text x="852.8" y="376" class="bus-val-stall">div_busy = 1 (Asserted for 32 consecutive clock cycles)</text>
+<line x1="260" y1="458" x2="650" y2="458" class="sig-low"/>
+<path d="M 650 458 L 654 440 L 1051.6 440 L 1055.6 458" class="sig-high"/>
+<line x1="1055.6" y1="458" x2="1367.6" y2="458" class="sig-low"/>
+<text x="852.8" y="436" class="bus-val-stall">Stall_PC = 1 (Freezes PC &amp; IF/ID register clock enables)</text>
+<polygon points="260,511.0 264,498 334,498 338,511.0 334,524 264,524" class="bus-outline"/>
+<text x="299.0" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="338,511.0 342,498 412,498 416,511.0 412,524 342,524" class="bus-outline"/>
+<text x="377.0" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="416,511.0 420,498 490,498 494,511.0 490,524 420,524" class="bus-outline"/>
+<text x="455.0" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="494,511.0 498,498 568,498 572,511.0 568,524 498,524" class="bus-fwd"/>
+<text x="533.0" y="515.0" class="bus-val-commit">2&#x27;b10 (WB-&gt;EX: x2)</text>
+<polygon points="572,511.0 576,498 646,498 650,511.0 646,524 576,524" class="bus-outline"/>
+<text x="611.0" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="650,511.0 654,498 724,498 728,511.0 724,524 654,524" class="bus-outline"/>
+<text x="689.0" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="728,511.0 732,498 973.6,498 977.6,511.0 973.6,524 732,524" class="bus-outline"/>
+<text x="852.8" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="977.6,511.0 981.6,498 1051.6,498 1055.6,511.0 1051.6,524 981.6,524" class="bus-outline"/>
+<text x="1016.5999999999999" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1055.6,511.0 1059.6,498 1129.6,498 1133.6,511.0 1129.6,524 1059.6,524" class="bus-outline"/>
+<text x="1094.6" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1133.6,511.0 1137.6,498 1207.6,498 1211.6,511.0 1207.6,524 1137.6,524" class="bus-outline"/>
+<text x="1172.6" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1211.6,511.0 1215.6,498 1285.6,498 1289.6,511.0 1285.6,524 1215.6,524" class="bus-outline"/>
+<text x="1250.6" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1289.6,511.0 1293.6,498 1363.6,498 1367.6,511.0 1363.6,524 1293.6,524" class="bus-outline"/>
+<text x="1328.6" y="515.0" class="bus-val">2&#x27;b00</text>
+<polygon points="260,571.0 264,558 334,558 338,571.0 334,584 264,584" class="bus-outline"/>
+<text x="299.0" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="338,571.0 342,558 412,558 416,571.0 412,584 342,584" class="bus-outline"/>
+<text x="377.0" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="416,571.0 420,558 490,558 494,571.0 490,584 420,584" class="bus-outline"/>
+<text x="455.0" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="494,571.0 498,558 568,558 572,571.0 568,584 498,584" class="bus-outline"/>
+<text x="533.0" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="572,571.0 576,558 646,558 650,571.0 646,584 576,584" class="bus-outline"/>
+<text x="611.0" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="650,571.0 654,558 724,558 728,571.0 724,584 654,584" class="bus-fwd"/>
+<text x="689.0" y="575.0" class="bus-val-commit">2&#x27;b10 (WB-&gt;EX: x4)</text>
+<polygon points="728,571.0 732,558 973.6,558 977.6,571.0 973.6,584 732,584" class="bus-outline"/>
+<text x="852.8" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="977.6,571.0 981.6,558 1051.6,558 1055.6,571.0 1051.6,584 981.6,584" class="bus-outline"/>
+<text x="1016.5999999999999" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1055.6,571.0 1059.6,558 1129.6,558 1133.6,571.0 1129.6,584 1059.6,584" class="bus-outline"/>
+<text x="1094.6" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1133.6,571.0 1137.6,558 1207.6,558 1211.6,571.0 1207.6,584 1137.6,584" class="bus-fwd"/>
+<text x="1172.6" y="575.0" class="bus-val-commit">2&#x27;b10 (WB-&gt;EX: x5)</text>
+<polygon points="1211.6,571.0 1215.6,558 1285.6,558 1289.6,571.0 1285.6,584 1215.6,584" class="bus-outline"/>
+<text x="1250.6" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="1289.6,571.0 1293.6,558 1363.6,558 1367.6,571.0 1363.6,584 1293.6,584" class="bus-outline"/>
+<text x="1328.6" y="575.0" class="bus-val">2&#x27;b00</text>
+<polygon points="260,633.0 264,618 334,618 338,633.0 334,648 264,648" class="bus-outline"/>
+<text x="299.0" y="637.0" class="bus-val">NOP</text>
+<polygon points="338,633.0 342,618 412,618 416,633.0 412,648 342,648" class="bus-outline"/>
+<text x="377.0" y="637.0" class="bus-val">NOP</text>
+<polygon points="416,633.0 420,618 490,618 494,633.0 490,648 420,648" class="bus-commit"/>
+<text x="455.0" y="637.0" class="bus-val-commit">addi x1</text>
+<polygon points="494,633.0 498,618 568,618 572,633.0 568,648 498,648" class="bus-commit"/>
+<text x="533.0" y="637.0" class="bus-val-commit">addi x2</text>
+<polygon points="572,633.0 576,618 646,618 650,633.0 646,648 576,648" class="bus-commit"/>
+<text x="611.0" y="637.0" class="bus-val-commit">add x3</text>
+<polygon points="650,633.0 654,618 724,618 728,633.0 724,648 654,648" class="bus-commit"/>
+<text x="689.0" y="637.0" class="bus-val-commit">mul x4</text>
+<polygon points="728,633.0 732,618 973.6,618 977.6,633.0 973.6,648 732,648" class="bus-stall"/>
+<text x="852.8" y="637.0" class="bus-val-stall">NOP (32 BUBBLE CYCLES INSERTED BY HAZARD UNIT)</text>
+<polygon points="977.6,633.0 981.6,618 1051.6,618 1055.6,633.0 1051.6,648 981.6,648" class="bus-stall"/>
+<text x="1016.5999999999999" y="637.0" class="bus-val-stall">NOP (Bubble)</text>
+<polygon points="1055.6,633.0 1059.6,618 1129.6,618 1133.6,633.0 1129.6,648 1059.6,648" class="bus-stall"/>
+<text x="1094.6" y="637.0" class="bus-val-stall">NOP (Bubble)</text>
+<polygon points="1133.6,633.0 1137.6,618 1207.6,618 1211.6,633.0 1207.6,648 1137.6,648" class="bus-commit"/>
+<text x="1172.6" y="637.0" class="bus-val-commit">div x5</text>
+<polygon points="1211.6,633.0 1215.6,618 1285.6,618 1289.6,633.0 1285.6,648 1215.6,648" class="bus-commit"/>
+<text x="1250.6" y="637.0" class="bus-val-commit">addi x6</text>
+<polygon points="1289.6,633.0 1293.6,618 1363.6,618 1367.6,633.0 1363.6,648 1293.6,648" class="bus-outline"/>
+<text x="1328.6" y="637.0" class="bus-val">NOP</text>
+<polygon points="260,692.0 264,678 334,678 338,692.0 334,706 264,706" class="bus-outline"/>
+<text x="299.0" y="696.0" class="bus-val">-</text>
+<polygon points="338,692.0 342,678 412,678 416,692.0 412,706 342,706" class="bus-outline"/>
+<text x="377.0" y="696.0" class="bus-val">-</text>
+<polygon points="416,692.0 420,678 490,678 494,692.0 490,706 420,706" class="bus-commit"/>
+<text x="455.0" y="696.0" class="bus-val-commit">x1 = 10</text>
+<polygon points="494,692.0 498,678 568,678 572,692.0 568,706 498,706" class="bus-commit"/>
+<text x="533.0" y="696.0" class="bus-val-commit">x2 = 20</text>
+<polygon points="572,692.0 576,678 646,678 650,692.0 646,706 576,706" class="bus-commit"/>
+<text x="611.0" y="696.0" class="bus-val-commit">x3 = 30</text>
+<polygon points="650,692.0 654,678 724,678 728,692.0 724,706 654,706" class="bus-commit"/>
+<text x="689.0" y="696.0" class="bus-val-commit">x4 = 200</text>
+<polygon points="728,692.0 732,678 973.6,678 977.6,692.0 973.6,706 732,706" class="bus-outline"/>
+<text x="852.8" y="696.0" class="bus-val">- (No writeback during stall) -</text>
+<polygon points="977.6,692.0 981.6,678 1051.6,678 1055.6,692.0 1051.6,706 981.6,706" class="bus-outline"/>
+<text x="1016.5999999999999" y="696.0" class="bus-val">-</text>
+<polygon points="1055.6,692.0 1059.6,678 1129.6,678 1133.6,692.0 1129.6,706 1059.6,706" class="bus-outline"/>
+<text x="1094.6" y="696.0" class="bus-val">-</text>
+<polygon points="1133.6,692.0 1137.6,678 1207.6,678 1211.6,692.0 1207.6,706 1137.6,706" class="bus-commit"/>
+<text x="1172.6" y="696.0" class="bus-val-commit">x5 = 20</text>
+<polygon points="1211.6,692.0 1215.6,678 1285.6,678 1289.6,692.0 1285.6,706 1215.6,706" class="bus-commit"/>
+<text x="1250.6" y="696.0" class="bus-val-commit">x6 = 25</text>
+<polygon points="1289.6,692.0 1293.6,678 1363.6,678 1367.6,692.0 1363.6,706 1293.6,706" class="bus-outline"/>
+<text x="1328.6" y="696.0" class="bus-val">-</text>
+<path d="M 484 678 C 484 600, 514 540, 514 524" class="arrow-fwd" marker-end="url(#arr-blue)"/>
+<text x="479" y="570" class="bus-val" fill="#2563EB" font-size="10px">RAW: x2 Forwarded (0 Stalls)</text>
+<path d="M 640 678 C 640 630, 670 600, 670 584" class="arrow-fwd" marker-end="url(#arr-blue)"/>
+<text x="630" y="630" class="bus-val" fill="#2563EB" font-size="10px">RAW: x4 Forwarded</text>
+<path d="M 1148.6 678 C 1138.6 640, 1148.6 600, 1158.6 584" class="arrow-fwd" marker-end="url(#arr-blue)"/>
+<text x="1163.6" y="610" class="bus-val" fill="#2563EB" font-size="10px">RAW: x5 Quotient Forwarded</text>
+<rect x="25.0" y="770" width="643.3333333333334" height="130" rx="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="40.0" y="795" class="annot-title" fill="#2563EB">1. Zero-Cycle RAW Hazard Forwarding</text>
+<text x="40.0" y="818" class="annot-desc">At Cycle 4, add depends on x2 from addi. The Hazard Unit asserts</text>
+<text x="40.0" y="834" class="annot-desc">ForwardBE = 2&#x27;b10, routing ResultW (20) directly to ALU SrcBE</text>
+<text x="40.0" y="850" class="annot-desc">without inserting pipeline bubbles (0 stall penalty).</text>
+<rect x="678.3333333333334" y="770" width="643.3333333333334" height="130" rx="6" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+<text x="693.3333333333334" y="795" class="annot-title" fill="#DC2626">2. Multi-Cycle Non-Restoring Divider Freeze (&lt;= 34 Cycles)</text>
+<text x="693.3333333333334" y="818" class="annot-desc">At Cycle 6, div x5 initiates the non-restoring shift-subtract</text>
+<text x="693.3333333333334" y="834" class="annot-desc">FSM, asserting div_busy = 1 and Stall_PC = 1 for 32 to 34</text>
+<text x="693.3333333333334" y="850" class="annot-desc">cycles. PC remains frozen at 0x14, holding addi x6 in IF while</text>
+<text x="693.3333333333334" y="866" class="annot-desc">WB receives NOP bubbles.</text>
+<rect x="1331.6666666666667" y="770" width="643.3333333333334" height="130" rx="6" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+<text x="1346.6666666666667" y="795" class="annot-title" fill="#059669">3. Single-Cycle DSP MUL &amp; Quotient Bypass</text>
+<text x="1346.6666666666667" y="818" class="annot-desc">At Cycle 4, mul executes in a single cycle via Artix-7 DSP48E1</text>
+<text x="1346.6666666666667" y="834" class="annot-desc">hard slices. At Cycle 39, the completed quotient x5=20 is</text>
+<text x="1346.6666666666667" y="850" class="annot-desc">immediately forwarded via ForwardAE = 2&#x27;b10 into addi x6.</text>
+</svg>
