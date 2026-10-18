@@ -1,0 +1,6 @@
+# EDA Simulation Artifacts
+*.vvp
+*.vcd
+*.gtkw
+*.jou
+*.log
