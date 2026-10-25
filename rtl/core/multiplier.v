@@ -2,7 +2,7 @@
 // AutoVision-RISC-V: Single-Cycle 64-Bit DSP Array Multiplier Coprocessor (RV32M)
 // Module: multiplier.v
 // Work Package: [WP-03][CORE] (Issue #3)
-// Assignee: Prakhar Mourya (PrakharMourya)
+// Author: Abhishek Kumar Deepak (Roll: 250101002, GitHub: abhiii927)
 // Target FPGA: AMD Xilinx Artix-7 XC7A100T-1CSG324C
 // Toolchain: AMD Vivado 2025.2 / Icarus Verilog 12+
 //

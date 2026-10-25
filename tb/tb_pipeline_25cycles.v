@@ -2,7 +2,7 @@
 // AutoVision-RISC-V: 25-Cycle Hazard Waveform & Core Integration Testbench
 // Module: tb_pipeline_25cycles.v
 // Work Package: [WP-01][CORE], [WP-02][CORE], [WP-16][VERIF]
-// Assignee: AutoVision Engineering Team (Prakhar Mourya & Rohit Yadav)
+// Author: Abhishek Kumar Deepak (Roll: 250101002, GitHub: abhiii927)
 // Target FPGA: AMD Xilinx Artix-7 XC7A100T-1CSG324C
 // Toolchain: AMD Vivado 2025.2 / Icarus Verilog 12+
 // Academic Standard: IIT Guwahati Advanced Computer Architecture (10/10 Target)
@@ -200,7 +200,7 @@ module tb_pipeline_25cycles;
         $display("AutoVision-RISC-V: 25-Cycle Hazard Waveform Simulation");
         $display("Standard: RV32IM 3-Stage Core Datapath Verification");
         $display("Target: AMD Xilinx Artix-7 XC7A100T-1CSG324C");
-        $display("Assignees: Prakhar Mourya & Rohit Yadav");
+        $display("Author: Abhishek Kumar Deepak (Roll: 250101002, GitHub: abhiii927)");
         $display("==============================================================================");
 
         // De-assert reset at cycle 2

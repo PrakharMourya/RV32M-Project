@@ -2,7 +2,7 @@
 // AutoVision-RISC-V: Exhaustive RV32I Base ISA & Core Verification Testbench
 // Module: tb_core_isa.v
 // Work Package: [WP-01][CORE] ISA Verification
-// Assignee: AutoVision Engineering Team (Prakhar Mourya & Rohit Yadav)
+// Author: Abhishek Kumar Deepak (Roll: 250101002, GitHub: abhiii927)
 // Target FPGA: AMD Xilinx Artix-7 XC7A100T-1CSG324C
 // Toolchain: AMD Vivado 2025.2 / Icarus Verilog 12+
 // Academic Standard: IIT Guwahati Advanced Computer Architecture (10/10 Target)
