@@ -1,20 +1,21 @@
 // ==============================================================================
-// AutoVision-RISC-V: Stage 2 Instruction Decode & Execution Unit
+// RV32M-Core: Master System Architecture & Hardware Extension
 // Module: id_ex_stage.v
-// Work Package: [WP-01][CORE] (Issue #1)
-// Target FPGA: AMD Xilinx Artix-7 XC7A100T-1CSG324C
-// Academic Standard: IIT Guwahati Advanced Computer Architecture (10/10 Target)
+// Work Package: [WP-05][CORE] (Issue #05)
+// Academic Standard: Group 22 — IIT Guwahati Advanced Computer Architecture
+// Target FPGA: AMD Xilinx Artix-7 (XC7A100T / XC7A35T)
+// Toolchain: AMD Vivado 2024.x/2025.x, Icarus Verilog 12+
 //
 // Description:
 // Stage 2 of the 3-stage RV32IM processor pipeline:
 //   - 32-entry General Purpose Register File with internal same-cycle bypass
-//   - Immediate Format Extender (I, S, B, U, J types)
-//   - Control Unit decoding all 37 base RV32I + RV32M instructions
+//   - Integrated Control Decoder (control_decoder.v) decoding all 37 RV32I + RV32M ops
 //   - Zero-cycle RAW Hazard Forwarding Multiplexers (WB -> EX)
-//   - 32-bit Arithmetic Logic Unit (alu.v)
-//   - Single-Cycle DSP Array Multiplier Coprocessor (multiplier.v)
+//   - Unified Arithmetic Logic Unit (alu_rv32m.v)
+//   - Single-Cycle DSP Array Multiplier Coprocessor (multiplier_rv32m.v)
+//   - Non-Restoring Sequential Radix-2 Hardware Divider FSM (divider_rv32m.v)
 //   - Branch & Jump Target / Condition Evaluator
-//   - Stage 2 -> Stage 3 Pipeline Register (RegB)
+//   - Stage 2 -> Stage 3 Pipeline Register (RegB) with stall freeze bubble insertion
 // ==============================================================================
 
 `timescale 1ns / 1ps
@@ -40,6 +41,7 @@ module id_ex_stage (
     // Hazard unit feedback outputs
     output wire [4:0]  id_rs1,             // Source register 1 address
     output wire [4:0]  id_rs2,             // Source register 2 address
+    output wire        div_busy,           // Stall signal from divider coprocessor
     output wire        branch_taken,       // Branch / Jump condition satisfied
     output wire [31:0] branch_target_pc,   // Target address for branch / jump
     output wire        is_jal,             // JAL instruction decoded
@@ -53,32 +55,69 @@ module id_ex_stage (
     output reg         ex_wb_mem_read,     // Retire memory read enable
     output reg         ex_wb_mem_write,    // Retire memory write enable
     output reg  [2:0]  ex_wb_funct3,       // Funct3 for memory load/store formatting
-    output reg  [31:0] ex_wb_result,       // Computational result (ALU, MUL, PC+4)
+    output reg  [31:0] ex_wb_result,       // Computational result (ALU, MUL, DIV, PC+4)
     output reg  [31:0] ex_wb_mem_addr,     // Memory byte address (from ALU)
     output reg  [31:0] ex_wb_store_data    // Store payload data (from forwarded RS2)
 );
 
     // -------------------------------------------------------------------------
-    // Instruction Field Decomposition
+    // Control Decoder Instance
     // -------------------------------------------------------------------------
-    wire [6:0] opcode = id_instr[6:0];
-    wire [4:0] rd     = id_instr[11:7];
-    wire [2:0] funct3 = id_instr[14:12];
-    wire [4:0] rs1    = id_instr[19:15];
-    wire [4:0] rs2    = id_instr[24:20];
-    wire [6:0] funct7 = id_instr[31:25];
+    wire [6:0]  opcode;
+    wire [4:0]  rd;
+    wire [2:0]  funct3;
+    wire [4:0]  rs1;
+    wire [4:0]  rs2;
+    wire [6:0]  funct7;
+    wire [31:0] imm_i;
+    wire [31:0] imm_s;
+    wire [31:0] imm_b;
+    wire [31:0] imm_u;
+    wire [31:0] imm_j;
+    wire        is_r_type;
+    wire        is_i_type;
+    wire        is_load;
+    wire        is_store;
+    wire        is_branch;
+    wire        is_lui;
+    wire        is_auipc;
+    wire        is_m_extension;
+    wire        is_mul;
+    wire        is_div;
+    wire        reg_write;
+    wire [3:0]  alu_control;
+
+    control_decoder u_decoder (
+        .instr          (id_instr),
+        .opcode         (opcode),
+        .rd             (rd),
+        .funct3         (funct3),
+        .rs1            (rs1),
+        .rs2            (rs2),
+        .funct7         (funct7),
+        .imm_i          (imm_i),
+        .imm_s          (imm_s),
+        .imm_b          (imm_b),
+        .imm_u          (imm_u),
+        .imm_j          (imm_j),
+        .is_r_type      (is_r_type),
+        .is_i_type      (is_i_type),
+        .is_load        (is_load),
+        .is_store       (is_store),
+        .is_branch      (is_branch),
+        .is_jal         (is_jal),
+        .is_jalr        (is_jalr),
+        .is_lui         (is_lui),
+        .is_auipc       (is_auipc),
+        .is_m_extension (is_m_extension),
+        .is_mul         (is_mul),
+        .is_div         (is_div),
+        .reg_write      (reg_write),
+        .alu_control    (alu_control)
+    );
 
     assign id_rs1 = rs1;
     assign id_rs2 = rs2;
-
-    // -------------------------------------------------------------------------
-    // Immediate Format Extender (I, S, B, U, J types)
-    // -------------------------------------------------------------------------
-    wire [31:0] imm_i = {{20{id_instr[31]}}, id_instr[31:20]};
-    wire [31:0] imm_s = {{20{id_instr[31]}}, id_instr[31:25], id_instr[11:7]};
-    wire [31:0] imm_b = {{19{id_instr[31]}}, id_instr[31], id_instr[7], id_instr[30:25], id_instr[11:8], 1'b0};
-    wire [31:0] imm_u = {id_instr[31:12], 12'b0};
-    wire [31:0] imm_j = {{11{id_instr[31]}}, id_instr[31], id_instr[19:12], id_instr[20], id_instr[30:21], 1'b0};
 
     // -------------------------------------------------------------------------
     // 32-Entry General Purpose Register File (Dual Read, Same-Cycle Bypass)
@@ -105,32 +144,12 @@ module id_ex_stage (
     // -------------------------------------------------------------------------
     // RAW Hazard Forwarding Multiplexers (WB -> EX)
     // -------------------------------------------------------------------------
-    // forward_a / forward_b == 2'b10 selects writeback stage committed value
-    // -------------------------------------------------------------------------
     wire [31:0] operand_a = (forward_a == 2'b10) ? wb_forward_data : rf_rs1_data;
     wire [31:0] operand_b = (forward_b == 2'b10) ? wb_forward_data : rf_rs2_data;
 
     // -------------------------------------------------------------------------
-    // Control Unit Decoder (RV32I + RV32M)
-    // -------------------------------------------------------------------------
-    wire is_r_type = (opcode == `OPCODE_R_TYPE);
-    wire is_i_type = (opcode == `OPCODE_I_TYPE);
-    wire is_load   = (opcode == `OPCODE_LOAD);
-    wire is_store  = (opcode == `OPCODE_STORE);
-    wire is_branch = (opcode == `OPCODE_BRANCH);
-    assign is_jal  = (opcode == `OPCODE_JAL);
-    assign is_jalr = (opcode == `OPCODE_JALR);
-    wire is_lui    = (opcode == `OPCODE_LUI);
-    wire is_auipc  = (opcode == `OPCODE_AUIPC);
-
-    // RV32M coprocessor instruction detection
-    wire is_m_extension = is_r_type && (funct7 == `FUNCT7_M_EXTENSION);
-    wire is_mul         = is_m_extension && (funct3[2] == 1'b0); // MUL, MULH, MULHSU, MULHU
-
-    // Register write enable
-    wire reg_write = (is_r_type | is_i_type | is_load | is_jal | is_jalr | is_lui | is_auipc) & (rd != 5'd0);
-
     // ALU Source Multiplexers
+    // -------------------------------------------------------------------------
     wire [31:0] alu_op_a = (is_auipc | is_jal) ? id_pc : operand_a;
     reg  [31:0] alu_op_b;
     always @(*) begin
@@ -142,71 +161,85 @@ module id_ex_stage (
         else alu_op_b = operand_b;
     end
 
-    // ALU Control Decoder
-    reg [3:0] alu_control;
-    always @(*) begin
-        if (is_load | is_store | is_auipc | is_jal) begin
-            alu_control = `ALU_CTRL_ADD;
-        end else if (is_lui) begin
-            alu_control = `ALU_CTRL_PASS_B;
-        end else if (is_i_type) begin
-            case (funct3)
-                `FUNCT3_ADD_SUB: alu_control = `ALU_CTRL_ADD;
-                `FUNCT3_SLL:     alu_control = `ALU_CTRL_SLL;
-                `FUNCT3_SLT:     alu_control = `ALU_CTRL_SLT;
-                `FUNCT3_SLTU:    alu_control = `ALU_CTRL_SLTU;
-                `FUNCT3_XOR:     alu_control = `ALU_CTRL_XOR;
-                `FUNCT3_SRL_SRA: alu_control = (funct7[5] == 1'b1) ? `ALU_CTRL_SRA : `ALU_CTRL_SRL;
-                `FUNCT3_OR:      alu_control = `ALU_CTRL_OR;
-                `FUNCT3_AND:     alu_control = `ALU_CTRL_AND;
-                default:         alu_control = `ALU_CTRL_ADD;
-            endcase
-        end else if (is_r_type && !is_m_extension) begin
-            case (funct3)
-                `FUNCT3_ADD_SUB: alu_control = (funct7[5] == 1'b1) ? `ALU_CTRL_SUB : `ALU_CTRL_ADD;
-                `FUNCT3_SLL:     alu_control = `ALU_CTRL_SLL;
-                `FUNCT3_SLT:     alu_control = `ALU_CTRL_SLT;
-                `FUNCT3_SLTU:    alu_control = `ALU_CTRL_SLTU;
-                `FUNCT3_XOR:     alu_control = `ALU_CTRL_XOR;
-                `FUNCT3_SRL_SRA: alu_control = (funct7[5] == 1'b1) ? `ALU_CTRL_SRA : `ALU_CTRL_SRL;
-                `FUNCT3_OR:      alu_control = `ALU_CTRL_OR;
-                `FUNCT3_AND:     alu_control = `ALU_CTRL_AND;
-                default:         alu_control = `ALU_CTRL_ADD;
-            endcase
-        end else begin
-            alu_control = `ALU_CTRL_ADD;
-        end
-    end
-
-    // -------------------------------------------------------------------------
-    // ALU Instance
-    // -------------------------------------------------------------------------
-    wire [31:0] alu_result;
-    wire        alu_zero;
-
-    alu u_alu (
-        .alu_control (alu_control),
-        .operand_a   (alu_op_a),
-        .operand_b   (alu_op_b),
-        .alu_result  (alu_result),
-        .zero        (alu_zero)
-    );
-
     // -------------------------------------------------------------------------
     // Multiplier Coprocessor Instance (RV32M Single-Cycle DSP Array)
     // -------------------------------------------------------------------------
     wire [31:0] mul_result;
     wire        mul_ready;
 
-    multiplier u_multiplier (
+    multiplier_rv32m #(
+        .PIPELINED (0) // 1-cycle combinational DSP execution in 3-stage core
+    ) u_multiplier (
         .clk       (clk),
-        .reset_n   (reset_n),
-        .enable    (is_mul),
+        .rst_n     (reset_n),
+        .start     (is_mul),
         .funct3    (funct3),
         .operand_a (operand_a),
         .operand_b (operand_b),
         .result    (mul_result),
         .ready     (mul_ready)
+    );
+
+    // -------------------------------------------------------------------------
+    // Hardware Divider Coprocessor Instance (RV32M Non-Restoring FSM)
+    // -------------------------------------------------------------------------
+    wire [31:0] div_quotient;
+    wire [31:0] div_remainder;
+    wire [31:0] div_result;
+    wire        internal_div_busy;
+    wire        div_done;
+    reg         div_active;
+
+    // Generate clean 1-cycle start pulse for divider
+    always @(posedge clk or negedge reset_n) begin
+        if (!reset_n) begin
+            div_active <= 1'b0;
+        end else if (div_done) begin
+            div_active <= 1'b0;
+        end else if (is_div && !internal_div_busy) begin
+            div_active <= 1'b1;
+        end
+    end
+
+    wire div_start = is_div && !div_active && !div_done;
+
+    divider_rv32m u_divider (
+        .clk       (clk),
+        .rst_n     (reset_n),
+        .start     (div_start),
+        .funct3    (funct3),
+        .dividend  (operand_a),
+        .divisor   (operand_b),
+        .quotient  (div_quotient),
+        .remainder (div_remainder),
+        .result    (div_result),
+        .busy      (internal_div_busy),
+        .done      (div_done)
+    );
+
+    // Assert div_busy to hazard unit immediately from decode until done
+    assign div_busy = is_div && !div_done;
+
+    // -------------------------------------------------------------------------
+    // Unified ALU & Execution Multiplexer Instance
+    // -------------------------------------------------------------------------
+    wire [31:0] alu_result;
+    wire [31:0] ex_result;
+    wire        alu_zero;
+
+    alu_rv32m u_alu (
+        .alu_control (alu_control),
+        .operand_a   (alu_op_a),
+        .operand_b   (alu_op_b),
+        .is_mul      (is_mul),
+        .mul_result  (mul_result),
+        .is_div      (is_div),
+        .div_result  (div_result),
+        .is_link     (is_jal | is_jalr),
+        .link_pc     (id_pc + 32'd4),
+        .ex_result   (ex_result),
+        .alu_result  (alu_result),
+        .zero        (alu_zero)
     );
 
     // -------------------------------------------------------------------------
@@ -230,13 +263,6 @@ module id_ex_stage (
     assign branch_target_pc = is_jalr ? ((operand_a + imm_i) & ~32'h1) :
                               is_jal  ? (id_pc + imm_j) :
                                         (id_pc + imm_b);
-
-    // -------------------------------------------------------------------------
-    // Execution Unit Result Multiplexer
-    // -------------------------------------------------------------------------
-    wire [31:0] ex_result = is_mul          ? mul_result :
-                            (is_jal | is_jalr) ? (id_pc + 32'd4) :
-                                              alu_result;
 
     // -------------------------------------------------------------------------
     // Stage 2 -> Stage 3 Pipeline Registers (RegB)

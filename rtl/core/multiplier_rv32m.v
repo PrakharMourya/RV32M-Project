@@ -18,16 +18,16 @@
 //   - MULHSU (funct3 = 3'b010): Upper 32 bits of signed x unsigned (Rd = (Rs1 * Rs2)[63:32])
 //   - MULHU  (funct3 = 3'b011): Upper 32 bits of unsigned x unsigned (Rd = (Rs1 * Rs2)[63:32])
 //
-// Microarchitectural Interface Contract:
-//   - Input operands are sign-extended (MUL, MULH, MULHSU) or zero-extended (MULHU)
-//     to 33 bits, producing a unified 66-bit internal product.
-//   - Registered output slice with a 1-cycle active 'ready' strobe.
-//   - Synchronous/asynchronous active-low reset (rst_n).
+// Microarchitectural Parameterization:
+//   - PIPELINED = 0: Single-cycle combinational DSP-assisted execution.
+//   - PIPELINED = 1: Registered output slice with 1-cycle active ready flag.
 // ==============================================================================
 
 `timescale 1ns / 1ps
 
-module multiplier_rv32m (
+module multiplier_rv32m #(
+    parameter PIPELINED = 0 // 0: combinational DSP execution, 1: registered output slice
+)(
     input  wire        clk,        // System clock (50 MHz - 100 MHz target)
     input  wire        rst_n,      // Active-low reset
     input  wire        start,      // Trigger signal from decode/execute stage
@@ -35,7 +35,7 @@ module multiplier_rv32m (
     input  wire [31:0] operand_a,  // rs1 data
     input  wire [31:0] operand_b,  // rs2 data
     output reg  [31:0] result,     // Selected lower or upper 32-bit slice
-    output reg         ready       // High when computation is valid (1-cycle pulse)
+    output reg         ready       // High when computation is valid
 );
 
     // -------------------------------------------------------------------------
@@ -48,10 +48,6 @@ module multiplier_rv32m (
 
     // -------------------------------------------------------------------------
     // Unified 33-Bit Signed/Unsigned Operand Extension
-    // -------------------------------------------------------------------------
-    // Sign rules per RISC-V M-Extension specification:
-    // - Operand A is signed for MUL, MULH, MULHSU; unsigned (zero-extended) for MULHU.
-    // - Operand B is signed for MUL, MULH; unsigned (zero-extended) for MULHSU, MULHU.
     // -------------------------------------------------------------------------
     wire sign_a = (funct3 != OP_MULHU) ? operand_a[31] : 1'b0;
     wire sign_b = (funct3 == OP_MUL || funct3 == OP_MULH) ? operand_b[31] : 1'b0;
@@ -68,23 +64,36 @@ module multiplier_rv32m (
     // -------------------------------------------------------------------------
     // Combinational Output Slice Selection
     // -------------------------------------------------------------------------
-    // - MUL selects lower 32 bits: [31:0]
-    // - MULH, MULHSU, MULHU select upper 32 bits: [63:32]
-    // -------------------------------------------------------------------------
     wire [31:0] result_slice = (funct3 == OP_MUL) ? product_66[31:0] : product_66[63:32];
 
     // -------------------------------------------------------------------------
-    // Registered Output Stage & 1-Cycle Ready Strobe Generation
+    // Registered Output Stage (for PIPELINED = 1 mode)
     // -------------------------------------------------------------------------
+    reg [31:0] reg_result;
+    reg        reg_ready;
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            result <= 32'h0000_0000;
-            ready  <= 1'b0;
+            reg_result <= 32'h0000_0000;
+            reg_ready  <= 1'b0;
         end else if (start) begin
-            result <= result_slice;
-            ready  <= 1'b1;
+            reg_result <= result_slice;
+            reg_ready  <= 1'b1;
         end else begin
-            ready  <= 1'b0;
+            reg_ready  <= 1'b0;
+        end
+    end
+
+    // -------------------------------------------------------------------------
+    // Output Multiplexing (Combinational vs Registered)
+    // -------------------------------------------------------------------------
+    always @(*) begin
+        if (PIPELINED) begin
+            result = reg_result;
+            ready  = reg_ready;
+        end else begin
+            result = result_slice;
+            ready  = start;
         end
     end
 

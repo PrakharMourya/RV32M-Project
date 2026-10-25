@@ -41,9 +41,11 @@ module tb_multiplier;
     wire        ready;
 
     // -------------------------------------------------------------------------
-    // Instantiate DUT (multiplier_rv32m)
+    // Instantiate DUT (multiplier_rv32m) in Pipelined Mode
     // -------------------------------------------------------------------------
-    multiplier_rv32m dut (
+    multiplier_rv32m #(
+        .PIPELINED (1)
+    ) dut (
         .clk       (clk),
         .rst_n     (rst_n),
         .start     (start),

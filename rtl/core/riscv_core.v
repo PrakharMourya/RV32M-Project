@@ -1,18 +1,19 @@
 // ==============================================================================
-// AutoVision-RISC-V: 3-Stage Pipelined RV32IM Processor Core
-// Module: riscv_core.v
-// Work Package: [WP-01][CORE] (Issue #1)
-// Target FPGA: AMD Xilinx Artix-7 XC7A100T-1CSG324C
-// Academic Standard: IIT Guwahati Advanced Computer Architecture (10/10 Target)
+// RV32M-Core: Master System Architecture & Hardware Extension
+// Module: riscv_core.v (Top-Level Pipelined RV32IM Processor Core)
+// Work Package: [WP-05][CORE] (Issue #05)
+// Academic Standard: Group 22 — IIT Guwahati Advanced Computer Architecture
+// Target FPGA: AMD Xilinx Artix-7 (XC7A100T / XC7A35T)
+// Toolchain: AMD Vivado 2024.x/2025.x, Icarus Verilog 12+
 //
 // Description:
 // Top-level 3-stage pipelined RV32IM processor core:
 //   - Stage 1: Instruction Fetch & Program Counter logic (if_stage.v)
-//   - Stage 2: Instruction Decode, ALU & DSP Multiplier execution (id_ex_stage.v)
+//   - Stage 2: Instruction Decode, ALU & RV32M execution (id_ex_stage.v)
+//              * multiplier_rv32m: Single-cycle DSP array (MUL, MULH, MULHSU, MULHU)
+//              * divider_rv32m: Non-restoring FSM (DIV, DIVU, REM, REMU)
 //   - Stage 3: Memory Access & Writeback Commit (wb_stage.v)
-//   - Centralized Hazard Unit: Zero-cycle RAW Forwarding & Stall Freeze (hazard_unit.v)
-//
-// Conforms strictly to the Section 3 Hardware Interface Contract of Issue #1.
+//   - Centralized Hazard Unit: Zero-cycle RAW Forwarding & Multicycle Stall Freeze (hazard_unit.v)
 // ==============================================================================
 
 `timescale 1ns / 1ps
@@ -63,6 +64,7 @@ module riscv_core (
     // Stage 2 (ID/EX) -> Stage 1 & Hazard Unit control signals
     wire [4:0]  id_rs1;
     wire [4:0]  id_rs2;
+    wire        div_busy;
     wire        branch_taken;
     wire [31:0] branch_target_pc;
     wire        is_jal;
@@ -94,7 +96,7 @@ module riscv_core (
         .id_rs2         (id_rs2),
         .wb_reg_write   (wb_reg_write),
         .wb_rd          (wb_rd),
-        .div_busy       (1'b0),          // Reserved for divider coprocessor
+        .div_busy       (div_busy),          // Connected to non-restoring divider FSM
         .coproc_busy    (coproc_busy),
         .branch_taken   (branch_taken),
         .is_jal         (is_jal),
@@ -123,7 +125,7 @@ module riscv_core (
     );
 
     // -------------------------------------------------------------------------
-    // Stage 2: Instruction Decode, ALU & Multiplier Execution Unit
+    // Stage 2: Instruction Decode, ALU, Multiplier & Divider Execution Unit
     // -------------------------------------------------------------------------
     id_ex_stage u_id_ex_stage (
         .clk              (clk),
@@ -139,6 +141,7 @@ module riscv_core (
         .wb_wdata         (wb_wdata),
         .id_rs1           (id_rs1),
         .id_rs2           (id_rs2),
+        .div_busy         (div_busy),
         .branch_taken     (branch_taken),
         .branch_target_pc (branch_target_pc),
         .is_jal           (is_jal),
