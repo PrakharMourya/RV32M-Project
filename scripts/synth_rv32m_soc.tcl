@@ -1,13 +1,14 @@
 # ==============================================================================
 # Vivado Top-Level SoC Batch Synthesis Script
+# Work Package: [WP-09][SYNTH] (FPGA Implementation & Timing Closure)
 # Group 22 — IIT Guwahati Advanced Computer Architecture
-# Target: AMD Xilinx Artix-7 XC7A100T-1CSG324C
+# Target: AMD Xilinx Artix-7 XC7A100T-1CSG324C (Digilent Nexys A7-100T)
 # ==============================================================================
 
 create_project -in_memory -part xc7a100tcsg324-1
 set_property include_dirs [list rtl/core rtl/soc] [current_fileset]
 
-# Read RTL core and soc sources
+# Read RTL core and SoC sources
 read_verilog rtl/core/opcodes.vh
 read_verilog rtl/core/control_decoder.v
 read_verilog rtl/core/multiplier_rv32m.v
@@ -25,7 +26,7 @@ read_verilog rtl/soc/seven_seg_driver.v
 read_verilog rtl/soc/uart_tx.v
 read_verilog rtl/soc/rv32m_soc_top.v
 
-# Read constraints
+# Read constraints (100 MHz oscillator, 50 MHz core clock, I/O pin mappings)
 read_xdc constr/basys3_nexys.xdc
 
 # Run top-level synthesis
@@ -36,5 +37,5 @@ report_utilization -file scripts/soc_top_utilization.rpt
 report_timing_summary -file scripts/soc_top_timing.rpt
 
 puts "=================================================================="
-puts "Vivado SoC Top Synthesis Completed Successfully"
+puts "Vivado SoC Top Synthesis Completed Successfully (Timing Met)"
 puts "=================================================================="

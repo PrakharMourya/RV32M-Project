@@ -51,12 +51,12 @@ for WL in "${WORKLOADS[@]}"; do
     # 1. Software Emulation Mode (-march=rv32i -mabi=ilp32)
     $CC -march=rv32i -mabi=ilp32 $CFLAGS $COMMON_SRC $SRC -o "$DIR/${WL}_rv32i.elf"
     $OBJDUMP -d "$DIR/${WL}_rv32i.elf" > "$DIR/${WL}_rv32i.dump"
-    $OBJCOPY -O verilog --verilog-data-width=4 "$DIR/${WL}_rv32i.elf" "$DIR/${WL}_rv32i.hex" 2>/dev/null || true
+    python3 scripts/elf2hex.py "$DIR/${WL}_rv32i.elf" "$DIR/${WL}_rv32i.hex" "$OBJCOPY" 2>/dev/null || python scripts/elf2hex.py "$DIR/${WL}_rv32i.elf" "$DIR/${WL}_rv32i.hex" "$OBJCOPY"
 
     # 2. Hardware Accelerated Mode (-march=rv32im -mabi=ilp32)
     $CC -march=rv32im -mabi=ilp32 $CFLAGS $COMMON_SRC $SRC -o "$DIR/${WL}_rv32im.elf"
     $OBJDUMP -d "$DIR/${WL}_rv32im.elf" > "$DIR/${WL}_rv32im.dump"
-    $OBJCOPY -O verilog --verilog-data-width=4 "$DIR/${WL}_rv32im.elf" "$DIR/${WL}_rv32im.hex" 2>/dev/null || true
+    python3 scripts/elf2hex.py "$DIR/${WL}_rv32im.elf" "$DIR/${WL}_rv32im.hex" "$OBJCOPY" 2>/dev/null || python scripts/elf2hex.py "$DIR/${WL}_rv32im.elf" "$DIR/${WL}_rv32im.hex" "$OBJCOPY"
 
     echo "    -> Generated: ${WL}_rv32i.elf, ${WL}_rv32i.dump"
     echo "    -> Generated: ${WL}_rv32im.elf, ${WL}_rv32im.dump"

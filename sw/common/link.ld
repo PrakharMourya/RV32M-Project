@@ -56,6 +56,12 @@ SECTIONS
         _ebss = .;
     } > RAM
 
+    /DISCARD/ : {
+        *(.note*)
+        *(.comment)
+        *(.riscv.attributes)
+    }
+
     /* Stack allocated at top of 16 KB BRAM */
     . = ALIGN(16);
     _stack_top = ORIGIN(RAM) + LENGTH(RAM) - 4;
